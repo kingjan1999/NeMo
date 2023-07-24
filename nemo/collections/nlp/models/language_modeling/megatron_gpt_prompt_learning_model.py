@@ -406,11 +406,9 @@ class MegatronGPTPromptLearningModel(MegatronBasePromptLearningModel):
                     label = self.tokenizer.ids_to_text(label)
                     preds_text.append(pred)
                     labels_text.append(label)
-                self.validation_step_outputs.append({
-                    'loss': loss_mean,
-                    'preds': preds_text,
-                    'labels': labels_text,
-                })
+                self.validation_step_outputs.append(
+                    {'loss': loss_mean, 'preds': preds_text, 'labels': labels_text,}
+                )
                 return {
                     'loss': loss_mean,
                     'preds': preds_text,
@@ -487,7 +485,7 @@ class MegatronGPTPromptLearningModel(MegatronBasePromptLearningModel):
         gbs = self.cfg.global_batch_size
         mbs = self.cfg.micro_batch_size
         self._reconfigure_batch_sizes(gbs, mbs)
-        self.validation_step_outputs.clear() #free memory
+        self.validation_step_outputs.clear()  # free memory
 
     def test_step(self, dataloader_iter, batch_idx):
         return self.validation_step(dataloader_iter, batch_idx)

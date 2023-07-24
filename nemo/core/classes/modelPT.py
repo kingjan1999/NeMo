@@ -178,15 +178,17 @@ class ModelPT(LightningModule, Model):
                 )
 
         # Create list of lists for val and test outputs to support multiple dataloaders
-        self.validation_step_outputs = [] # Initialize an empty list as sometimes self._validation_dl can be None at this stage
-        # Check len(self._validation_dl) > 1 as sometimes single dataloader can be in a list: [<Dataloader obj>] when ds_item in 
+        self.validation_step_outputs = (
+            []
+        )  # Initialize an empty list as sometimes self._validation_dl can be None at this stage
+        # Check len(self._validation_dl) > 1 as sometimes single dataloader can be in a list: [<Dataloader obj>] when ds_item in
         # config has 1 item passed in a list
         if self._validation_dl and type(self._validation_dl) == list and len(self._validation_dl) > 1:
             for _ in range(len(self._validation_dl)):
                 self.validation_step_outputs.append([])
 
-        self.test_step_outputs = [] # Initialize an empty list as sometimes self._test_dl can be None at this stage
-        if self._test_dl and type(self._test_dl) == list and len(self._test_dl) > 1: 
+        self.test_step_outputs = []  # Initialize an empty list as sometimes self._test_dl can be None at this stage
+        if self._test_dl and type(self._test_dl) == list and len(self._test_dl) > 1:
             for _ in range(len(self._test_dl)):
                 self.test_step_outputs.append([])
         # ModelPT wrappers over subclass implementations
@@ -893,7 +895,7 @@ class ModelPT(LightningModule, Model):
             if output_dict is not None and 'log' in output_dict:
                 self.log_dict(output_dict.pop('log'), on_epoch=True)
 
-            self.validation_step_outputs.clear() # free memory
+            self.validation_step_outputs.clear()  # free memory
             return output_dict
 
         else:  # Case where we provide more than 1 data loader
@@ -949,11 +951,11 @@ class ModelPT(LightningModule, Model):
                         new_k = dataloader_prefix + k
                         output_dict[new_k] = v
 
-                self.validation_step_outputs[dataloader_idx].clear() # free memory
+                self.validation_step_outputs[dataloader_idx].clear()  # free memory
 
             if 'log' in output_dict:
                 self.log_dict(output_dict.pop('log'), on_epoch=True)
-            
+
             # return everything else
             return output_dict
 
@@ -989,7 +991,7 @@ class ModelPT(LightningModule, Model):
             if output_dict is not None and 'log' in output_dict:
                 self.log_dict(output_dict.pop('log'), on_epoch=True)
 
-            self.test_step_outputs.clear() # free memory
+            self.test_step_outputs.clear()  # free memory
             return output_dict
 
         else:  # Case where we provide more than 1 data loader
@@ -1042,7 +1044,7 @@ class ModelPT(LightningModule, Model):
                         # If any values are stored outside 'log', simply prefix name and store
                         new_k = dataloader_prefix + k
                         output_dict[new_k] = v
-                self.test_step_outputs[dataloader_idx].clear() # free memory
+                self.test_step_outputs[dataloader_idx].clear()  # free memory
 
             if 'log' in output_dict:
                 self.log_dict(output_dict.pop('log'), on_epoch=True)

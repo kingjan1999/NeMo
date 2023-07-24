@@ -561,9 +561,9 @@ class MegatronNMTModel(MegatronLMEncoderDecoderModel, Exportable):
                 data_parallel_size=parallel_state.get_data_parallel_world_size(),
             )
         if mode == 'val':
-            self.validation_step_outputs.clear() # free memory
+            self.validation_step_outputs.clear()  # free memory
         else:
-            self.test_step_outputs.clear() # free memory
+            self.test_step_outputs.clear()  # free memory
 
     def _log_multilingual_bleu_and_loss(self, dataloader_idx, bleu_score, loss, mode):
         """

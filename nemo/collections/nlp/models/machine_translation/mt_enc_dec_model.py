@@ -544,11 +544,11 @@ class MTEncDecModel(EncDecNLPModel, Exportable):
         :param outputs: list of individual outputs of each validation step.
         """
         self.eval_epoch_end(self.validation_step_outputs, 'val', self.global_rank)
-        self.validation_step_outputs.clear() #free memory
+        self.validation_step_outputs.clear()  # free memory
 
     def on_test_epoch_end(self):
         self.eval_epoch_end(self.test_step_outputs, 'test', self.global_rank)
-        self.test_step_outputs.clear() #free memory
+        self.test_step_outputs.clear()  # free memory
 
     @classmethod
     def setup_enc_dec_tokenizers(

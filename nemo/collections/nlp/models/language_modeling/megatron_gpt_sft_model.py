@@ -387,7 +387,7 @@ class MegatronGPTSFTModel(MegatronGPTModel):
             if type(self.trainer.test_dataloaders) == list and len(self.trainer.test_dataloaders) > 1:
                 self.test_step_outputs[dataloader_idx].append(outputs)
             else:
-                self.test_step_outputs.append(outputs) 
+                self.test_step_outputs.append(outputs)
         return outputs
         # TODO (sandeepsub): Figure out the subsequent decode bits.
         length_params: LengthParam = {
@@ -466,10 +466,10 @@ class MegatronGPTSFTModel(MegatronGPTModel):
         # Log metrics for each provided validation/test dataset.
         for dataloader_idx, output in enumerate(outputs):
             # Expand on_validation_epoch_end from parent class MegatronGPTModel as on_validation_epoch_end doesnt take outputs arg
-            #loss = super().on_validation_epoch_end([x['loss'] for x in output])
+            # loss = super().on_validation_epoch_end([x['loss'] for x in output])
             loss_vals = [x['loss'] for x in output]
             if parallel_state.is_pipeline_last_stage():
-            # only the last pipeline parallel stages return loss with their batch size
+                # only the last pipeline parallel stages return loss with their batch size
                 if self.cfg.data.get('validation_drop_last', True):
                     loss = torch.stack(loss_vals).mean()
                 else:
@@ -810,13 +810,13 @@ class MegatronGPTSFTModel(MegatronGPTModel):
         _ = self.inference_epoch_end(self.test_step_outputs, 'test', self.cfg.data.test_ds)
         self.test_step_outputs.clear()
         # Commenting as on_test_epoch_end was a no-op in PTL 1.9
-        #return super().on_test_epoch_end()
+        # return super().on_test_epoch_end()
 
     def on_validation_epoch_end(self):
         _ = self.inference_epoch_end(self.validation_step_outputs, 'validation', self.cfg.data.validation_ds)
         self.validation_step_outputs.clear()
         # Commenting as on_validation_epoch_end was a no-op in PTL 1.9
-        #return super().on_validation_epoch_end()
+        # return super().on_validation_epoch_end()
 
     def on_train_epoch_start(self) -> None:
         # Same logic as validation epoch end, but this may be need if there is no validation sanity check to trigger on_validation_epoch_end()

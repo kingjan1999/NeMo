@@ -126,8 +126,8 @@ class MegatronLMEncoderDecoderModel(MegatronBaseModel):
             # Model wrapper to convert both model and inputs to half precision
             self.enc_dec_model = Float16Module(module=self.enc_dec_model, precision=cfg.precision)
 
-        # Check for first few chars to be '16', '32' or 'bf16' as Precision can also be '16-mixed', '32-true' or 'bf16-mixed' 
-        # along with 16, 32 or bf16 in case of PTL >= 2.0 
+        # Check for first few chars to be '16', '32' or 'bf16' as Precision can also be '16-mixed', '32-true' or 'bf16-mixed'
+        # along with 16, 32 or bf16 in case of PTL >= 2.0
         if str(self.cfg.precision)[0:4] == 'bf16':
             self.autocast_dtype = torch.bfloat16
         elif str(self.cfg.precision)[0:2] == '32':
@@ -698,7 +698,7 @@ class MegatronLMEncoderDecoderModel(MegatronBaseModel):
         torch.distributed.broadcast(averaged_loss, get_last_rank())
         self.log('val_loss', averaged_loss, prog_bar=True, rank_zero_only=True, batch_size=1)
         self.log('global_step', self.trainer.global_step, prog_bar=True, rank_zero_only=True, batch_size=1)
-        self.validation_step_outputs.clear() # free memory
+        self.validation_step_outputs.clear()  # free memory
         return averaged_loss
 
     def test_step(self, dataloader_iter, batch_idx):
@@ -714,7 +714,7 @@ class MegatronLMEncoderDecoderModel(MegatronBaseModel):
         # we can only log on one rank if it is rank zero so we broadcast from last rank
         torch.distributed.broadcast(averaged_loss, get_last_rank())
         self.log('test_loss', averaged_loss, prog_bar=True, rank_zero_only=True, batch_size=1)
-        self.test_step_outputs.clear() # free memory
+        self.test_step_outputs.clear()  # free memory
         return averaged_loss
 
     def loss_func(self, loss_mask, tokens_loss):
